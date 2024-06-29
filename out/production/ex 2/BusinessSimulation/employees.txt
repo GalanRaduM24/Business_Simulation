@@ -1,0 +1,5 @@
+4
+Radu, 2000, 4, 20, 1, true, 200, 2020, 5, 16, IT, ProjectMare, 2022, 9, 7
+Marius, 2005, 2, 21, 2, false, 300, 2021, 12, 22, PR, PRproject, 2023, 11, 31
+Andrei, 2001, 7, 30, 3, true, 400, 2022, 6, 13, SM, ProjectSocial, 2023, 8, 7
+Ana, 2010, 1, 9, 4, false, 300, 2023, 12, 7, SM, ProjectSocial, 2023, 12, 8
