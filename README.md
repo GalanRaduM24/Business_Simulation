@@ -1,64 +1,120 @@
-# Business Simulation System
+# Enterprise Business & HR Simulation System
 
-## Overview 
-This project is a business simulation system where you can manage a company with various departments, projects, and employees. The system provides functionalities for creating departments, hiring and dismissing employees, starting and finishing projects, and more.
+[![Java](https://img.shields.io/badge/Java-JDK%2011+-ED8B00?logo=openjdk&logoColor=white)](https://www.oracle.com/java/)
+[![Paradigm](https://img.shields.io/badge/Paradigm-Object--Oriented%20Programming-blue.svg)]()
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-## Project Stucture
-The project is organized into several packages and classes, each handling different aspects of the system:
+An object-oriented enterprise management simulator developed in Java. The application simulates the internal operations of a corporate organization—including hierarchical department structuring, employee lifecycle management (recruiting, assignments, dismissals), project management with deadlines, and compensation analysis.
 
-1. BusinessSimulation: Contains the main entry point of the application and other essential classes like `Job` and `Project`.
+---
 
-- `Main`: The entry point of the application where the main menu and user interactions are handled.
-- `Job`: Represents a job position within the company, including salary and start date.
-- `Project`: Represents a project within the company, including the project name, deadline, and completion status.
+## Key Features
 
-2. BusinessSimulation.company: Contains classes related to the company structure and departments.
+- **Hierarchical Organizational Modeling**:
+  - Create parent departments and nested sub-departments.
+  - Track department-specific project allocations and team member rosters.
+- **Comprehensive Employee & HR Lifecycle**:
+  - **Recruitment & Dismissal**: Dynamic hiring workflows with personal identity validation and registry numbers.
+  - **Job Contracts & Compensation**: Associate positions with salary tiers, employment dates, and rank.
+  - **Salary Analytics**: Sort, inspect, and rank all organizational roles by compensation in descending order.
+- **Project Portfolio Management**:
+  - Initiate projects mapped to specific business units with target deadlines.
+  - Assign staff to active initiatives, track completion states, or simulate project divestment/sales.
+- **Batch Seeding via Flat-File Ingestion**:
+  - Auto-populate companies with complex organizational structures directly from formatted data files (`employees.txt`).
 
-- `Company`: Represents the company, managing departments and employees.
-- `Departament`: Represents a department within the company, handling employees, projects, and sub-departments.
-- `HumanResorces`: Manages employee-related operations like hiring and dismissing employees.
+---
 
-3.BusinessSimulation.person: Contains classes related to the employees of the company.
+## Domain Architecture
 
-- `Person`: Represents an individual employee, including personal details and job assignments.
-
-4. BusinessSimulation.util: Contains utility classes, such as `Date`, which is used for handling date-related operations in the system.
-
-## User Interaction
-When you run the application, you'll interact with it through a console-based menu. Here are the available options:
-
-- **Create Departments:** Add new departments to the company.
-- **Hire Employee:** Hire a new employee by entering their details.
-- **Dismiss Employee:** Dismiss an existing employee by entering their name.
-- **Start a New Project:** Initiate a new project within a specified department.
-- **Sell a Project:** Remove a project from a department and mark it as sold.
-- **Finish a Project:** Mark a project as completed.
-- **Check Departments List:** Display the list of all departments.
-- **Check Person List:** Display the list of all employees.
-- **Check Person Details:** Display details of a specific employee.
-- **Create SubDepartment:** Add a new sub-department within an existing department.
-- **Check if Project is Finished:** Verify if a project has been completed.
-- **See Salary:** Display and sort all jobs by salary in descending order.
-
-Example: Reading Employees from File
-The system can initialize employees from an external file. The file format should be as follows:
-
+```text
+┌──────────────────────────────────────────────────────────────────────────┐
+│                                 Company                                  │
+│  • Structure: createDepartment(), startProject()                         │
+│  • HR Lifecycle: hireEmployee(), dismissEmployee()                       │
+└──────────────────┬────────────────────────────────────┬──────────────────┘
+                   │ manages                            │ manages
+                   ▼                                    ▼
+┌──────────────────────────────────────┐   ┌───────────────────────────────┐
+│              Departament             │   │        Human Resources        │
+│  • Nested Sub-departments            │   │  • Employee Roster Directory  │
+│  • Assigned Projects & Staff         │   │  • Search by Name             │
+└──────────────────┬───────────────────┘   └──────────────┬────────────────┘
+                   │ assigned to                          │ employs
+                   ▼                                      ▼
+┌──────────────────────────────────────┐   ┌───────────────────────────────┐
+│               Project                │   │            Person             │
+│  • Name & Target Deadlines           │   │  • Profile & Registry Number  │
+│  • Completion State Tracking         │◄──┤  • Job Contract & Salary Tier │
+└──────────────────────────────────────┘   └───────────────────────────────┘
 ```
+
+---
+
+## Project Structure
+
+```text
+src/
+└── BusinessSimulation/
+    ├── company/
+    │   ├── Company.java          # Root organization orchestrator
+    │   ├── Departament.java      # Department & sub-department hierarchy
+    │   └── HumanResorces.java    # HR directory and employee management
+    ├── person/
+    │   └── Person.java           # Employee profile, attributes, and project links
+    ├── util/
+    │   └── Date.java             # Custom date parsing, formatting, and comparison
+    ├── Job.java                  # Role, salary level, and tenure
+    ├── Project.java              # Initiative definition, scope, and milestone state
+    ├── Main.java                 # Interactive CLI loop & batch file parser
+    └── employees.txt             # Initial seed dataset for bulk imports
+```
+
+---
+
+## File Ingestion Format (`employees.txt`)
+
+The system supports bootstrapping an entire corporate structure at startup from `employees.txt`:
+
+```text
 <number_of_employees>
-<name>, <birth_year> <birth_month> <birth_day>, <registry_number>, <is_manager>, <salary>, <start_year> <start_month> <start_day>, <department_name>, <project_name>, <project_deadline_year> <project_deadline_month> <project_deadline_day>
+<name>, <birth_year> <birth_month> <birth_day>, <registry_number>, <is_manager>, <salary>, <start_year> <start_month> <start_day>, <department_name>, <project_name>, <deadline_year> <deadline_month> <deadline_day>
 ```
 
-Example content for employees.txt:
-```
+**Example Data:**
+```text
 4
-Radu, 2000, 4, 20, 1, true, 200, 2020, 5, 16, IT, ProjectMare, 2022, 9, 7
-Marius, 2005, 2, 21, 2, false, 300, 2021, 12, 22, PR, PRproject, 2023, 11, 31
-Andrei, 2001, 7, 30, 3, true, 400, 2022, 6, 13, SM, ProjectSocial, 2023, 8, 7
-Ana, 2010, 1, 9, 4, false, 300, 2023, 12, 7, SM, ProjectSocial, 2023, 12, 8
+Radu, 2000, 4, 20, 1, true, 200, 2020, 5, 16, IT, ProjectAlpha, 2024, 9, 7
+Marius, 2005, 2, 21, 2, false, 300, 2021, 12, 22, PR, PRCampaign, 2024, 11, 30
+Andrei, 2001, 7, 30, 3, true, 400, 2022, 6, 13, SM, SocialGrowth, 2025, 8, 7
+Ana, 2003, 1, 9, 4, false, 300, 2023, 12, 7, SM, SocialGrowth, 2024, 12, 8
 ```
 
-## How to Run the Program
+---
 
-- Setup: Ensure you have Java installed on your system.
-- Compile the Code: Compile the Java code using your preferred IDE or the command line.
-- Run the Program: Execute the Main class to start the application.
+## Getting Started
+
+### Prerequisites
+- Java Development Kit (JDK) 11 or higher.
+
+### Compilation & Running
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/GalanRaduM24/Business_Simulation.git
+   cd Business_Simulation
+   ```
+
+2. **Compile the Java sources**:
+   ```bash
+   javac -d out src/BusinessSimulation/*.java src/BusinessSimulation/*/*.java
+   ```
+
+3. **Run the application**:
+   ```bash
+   # Copy employees.txt to working directory if needed
+   cp src/BusinessSimulation/employees.txt .
+   java -cp out BusinessSimulation.Main
+   ```
+
+4. **CLI Interaction**: Follow the on-screen prompts or enter `END TASK` to exit the application loop.
